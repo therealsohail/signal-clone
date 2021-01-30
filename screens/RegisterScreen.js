@@ -17,14 +17,26 @@ export default function RegisterScreen({ navigation }) {
         email,
         password
       );
-      console.log(authResponse);
+
       if (!authResponse["message"]) {
-        let user = await db.collection("Users").doc(authResponse.user.uid).set({
-          name,
-          email,
-          password,
-          imageUrl,
+        let udpateProfile = await authResponse.user.updateProfile({
+          displayName: name,
+          photoURL:
+            imageUrl ||
+            "https://powered-by-plants.co.uk/wp-content/uploads/2018/11/people.gif",
         });
+
+        let user = await db
+          .collection("Users")
+          .doc(authResponse.user.uid)
+          .set({
+            name,
+            email,
+            password,
+            imageUrl:
+              imageUrl ||
+              "https://powered-by-plants.co.uk/wp-content/uploads/2018/11/people.gif",
+          });
         navigation.navigate("Login");
       }
     } catch (error) {
