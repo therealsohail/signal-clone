@@ -2,7 +2,7 @@ Arguments:
   /snap/node/3292/bin/node /usr/local/bin/yarn global dir
 
 PATH: 
-  /home/sohail/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/sohail/Android/Sdk/emulator:/home/sohail/Android/Sdk/tools:/home/sohail/Android/Sdk/tools/bin:/home/sohail/Android/Sdk/platform-tools
+  /usr/local/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/home/sohail/Documents/Tuts/signalclone/node_modules/.bin:/home/sohail/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/sohail/Android/Sdk/emulator:/home/sohail/Android/Sdk/tools:/home/sohail/Android/Sdk/tools/bin:/home/sohail/Android/Sdk/platform-tools
 
 Yarn version: 
   1.22.10
@@ -53,7 +53,8 @@ npm manifest:
       "react-native-web": "~0.13.12"
     },
     "devDependencies": {
-      "@babel/core": "~7.9.0"
+      "@babel/core": "~7.9.0",
+      "firebase": "^8.2.5"
     },
     "private": true
   }

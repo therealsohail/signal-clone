@@ -3,11 +3,35 @@ import { KeyboardAvoidingView } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { Image, Button, Input } from "react-native-elements";
 import { StatusBar } from "expo-status-bar";
+import { auth, db } from "../firebase";
 
-const RegisterScreen = ({ navigation }) => {
+export default function RegisterScreen({ navigation }) {
   let [name, setName] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
+  let [imageUrl, setUrl] = useState("");
+
+  const handleSignup = async () => {
+    try {
+      let authResponse = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      console.log(authResponse);
+      if (!authResponse["message"]) {
+        let user = await db.collection("Users").doc(authResponse.user.uid).set({
+          name,
+          email,
+          password,
+          imageUrl,
+        });
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error["message"]);
+    }
+  };
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <StatusBar backgroundColor="#346EEB" style="light" />
@@ -21,40 +45,45 @@ const RegisterScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <Input
           placeholder="Enter Name"
-          autoFocus
           type="text"
           value={name}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => setName(text)}
         />
         <Input
           placeholder="Enter Email"
-          autoFocus
           type="email"
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
         <Input
           placeholder="Enter Password"
-          autoFocus
           secureTextEntry
           type="password"
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <Button containerStyle={styles.button} title="Login" />
+        <Input
+          placeholder="Enter Image URL"
+          type="text"
+          value={imageUrl}
+          onChangeText={(text) => setUrl(text)}
+        />
+        <Button
+          onPress={handleSignup}
+          containerStyle={styles.button}
+          title="Register"
+        />
         <Button
           containerStyle={styles.button}
           type="outline"
-          title="Register"
-          onPress={() => navigation.navigate("Register")}
+          title="Login"
+          onPress={() => navigation.navigate("Login")}
         />
         <View style={{ height: 100 }} />
       </View>
     </KeyboardAvoidingView>
   );
-};
-
-export default RegisterScreen;
+}
 
 const styles = StyleSheet.create({
   container: {
