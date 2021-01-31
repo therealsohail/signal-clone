@@ -1,14 +1,30 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet, View, Text } from "react-native";
 import { Avatar } from "react-native-elements";
 import CustomListItem from "../components/CustomListItem";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }) {
+  let [chats, setChats] = useState([]);
+
+  useEffect(async () => {
+    try {
+      let data = await db.collection("Chats").onSnapshot((snapshot) => {
+        let docs = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }));
+        setChats(docs);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Signal",
@@ -29,7 +45,7 @@ export default function HomeScreen({ navigation }) {
             justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("AddChat")}>
             <AntDesign size={24} name="search1" color="black" />
           </TouchableOpacity>
           <View style={{ width: 10 }}></View>
@@ -48,8 +64,9 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView>
       <ScrollView>
-        <CustomListItem />
-        <CustomListItem />
+        {chats.map((chat) => (
+          <CustomListItem chat={chat} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
